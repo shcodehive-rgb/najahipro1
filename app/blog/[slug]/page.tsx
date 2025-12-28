@@ -1,19 +1,18 @@
-import { client } from "@/sanity/client"
-import ReactMarkdown from "react-markdown" // بدلنا PortableText بهادي
+import { client } from "@/sanity/lib/client"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Sidebar } from "@/components/sidebar"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Comments } from "@/components/Comments"
+import { Button } from "@/components/ui/button" // تأكد أن عندك Button
+import { Comments } from "@/components/Comments" // تأكد أن عندك Comments
 import { Calendar, User, FileText, Download, MessageCircle } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import ReactMarkdown from "react-markdown"
 import { Metadata } from 'next'
 
-// 1. جلب المقال بالـ Slug ماشي ID
-async function getPost(slug: string) { // 👈 بدلنا id بـ slug
-  // 👇 بدلنا _id بـ slug.current
+// 1. جلب المقال باستعمال Slug (ماشي ID)
+async function getPost(slug: string) {
   const query = `*[_type == "post" && slug.current == $slug][0]{
     _id,
     title,
@@ -22,18 +21,19 @@ async function getPost(slug: string) { // 👈 بدلنا id بـ slug
     "imageUrl": mainImage.asset->url,
     content,
     "downloadUrl": driveLink,
-    "fileUrl": file.asset->url,
-    keywords // 👈 زدنا هادي باش SEO يخدم
+    "fileUrl": file.asset->url
   }`
-  const post = await client.fetch(query, { slug }) // 👈 كنصيفطو slug
+  const post = await client.fetch(query, { slug })
   return post
 }
 
 // 2. مقالات ذات صلة
 async function getRelatedPosts(category: string, currentId: string) {
+  // هنا كنستعملو level باش نجيبو مقالات من نفس المستوى
   const query = `*[_type == "post" && level == $category && _id != $currentId][0...3]{
     _id,
     title,
+    "slug": slug.current,
     "imageUrl": mainImage.asset->url,
     "category": level,
     "date": _createdAt
@@ -43,27 +43,28 @@ async function getRelatedPosts(category: string, currentId: string) {
 
 // 3. Metadata لـ SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params // 👈 هنا ولات slug
+  const { slug } = await params
   const post = await getPost(slug)
   if (!post) return { title: 'مقال غير موجود' }
   return {
     title: post.title,
     description: `اقرأ المزيد حول ${post.title} على منصة نجاحي برو.`,
-    keywords: post.keywords || ["تعليم", "المغرب", "دروس"],
     openGraph: { title: post.title, images: [post.imageUrl || '/images/default.jpg'] },
   }
 }
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params // 👈 هنا ولات slug
+  const { slug } = await params
   const post = await getPost(slug)
 
+  // إلا مالقاش المقال، طلع صفحة 404
   if (!post) notFound()
+
   const relatedPosts = await getRelatedPosts(post.category, post._id)
 
   return (
     <div className="min-h-screen bg-white" dir="rtl">
-      {/* كود منع كليك يمين (Client Side Script) */}
+      {/* كود منع كليك يمين (اختياري) */}
       <script dangerouslySetInnerHTML={{
         __html: `document.addEventListener('contextmenu', event => event.preventDefault());`
       }} />
@@ -71,10 +72,11 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <Header />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="text-sm text-gray-500 mb-6 flex gap-2 items-center">
+        {/* شريط التنقل العلوي (Breadcrumbs) */}
+        <div className="text-sm text-gray-500 mb-6 flex gap-2 items-center flex-wrap">
            <Link href="/" className="hover:text-blue-600">الرئيسية</Link> 
            <span>/</span> 
-           <span className="text-gray-400">{post.category}</span> 
+           <Link href={`/category/${post.category}`} className="text-gray-400 hover:text-blue-600">{post.category}</Link> 
            <span>/</span> 
            <span className="text-blue-600 font-bold truncate max-w-[200px]">{post.title}</span>
         </div>
@@ -99,22 +101,23 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                  <div className="h-64 bg-gray-100 flex items-center justify-center text-gray-400">لا توجد صورة</div>
                )}
             </div>
-{/* المحتوى الاحترافي - يدعم النظام الجديد والقديم معاً */}
-<div className="prose prose-lg prose-blue max-w-none 
-                prose-headings:font-bold 
-                prose-h1:text-4xl prose-h1:mb-6
-                prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-blue-600 prose-h2:border-r-4 prose-h2:border-blue-600 prose-h2:pr-4
-                prose-h3:text-2xl prose-h3:mt-6
-                text-gray-800 leading-loose mb-12 font-medium">
-  {typeof post.content === 'string' ? (
-    <ReactMarkdown>{post.content}</ReactMarkdown>
-  ) : (
-    <div className="p-6 bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl text-amber-700 text-center">
-      <p className="font-bold">⚠️ تنبيه: هذا المقال يحتاج تحديث</p>
-      <p className="text-sm">لقد انتقلنا لنظام Markdown السريع. يرجى إعادة لصق محتوى هذا المقال في Sanity.</p>
-    </div>
-  )}
-</div>
+
+            {/* المحتوى */}
+            <div className="prose prose-lg prose-blue max-w-none 
+                            prose-headings:font-bold 
+                            prose-h1:text-4xl prose-h1:mb-6
+                            prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-blue-600 prose-h2:border-r-4 prose-h2:border-blue-600 prose-h2:pr-4
+                            prose-h3:text-2xl prose-h3:mt-6
+                            text-gray-800 leading-loose mb-12 font-medium">
+              {typeof post.content === 'string' ? (
+                <ReactMarkdown>{post.content}</ReactMarkdown>
+              ) : (
+                <div className="p-6 bg-amber-50 border-2 border-dashed border-amber-200 rounded-2xl text-amber-700 text-center">
+                  <p>⚠️ المحتوى غير متوفر كنص (يرجى التأكد من كتابته في Sanity كـ Markdown)</p>
+                </div>
+              )}
+            </div>
+
             {/* PDF Viewer */}
             {post.fileUrl && (
               <div className="my-10 w-full shadow-2xl rounded-2xl overflow-hidden border-4 border-blue-50">
@@ -166,7 +169,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                 <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">مواضيع قد تهمك أيضاً</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {relatedPosts.map((item: any) => (
-                    <Link key={item._id} href={`/blog/${item._id}`} className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                    <Link key={item._id} href={`/blog/${item.slug}`} className="group block bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
                       <div className="h-40 overflow-hidden relative">
                         {item.imageUrl ? <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="w-full h-full bg-gray-200 flex items-center justify-center">NAJAHIPRO</div>}
                         <span className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">{item.category}</span>
