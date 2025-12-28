@@ -95,6 +95,8 @@ export default defineType({
           { title: 'مباراة التعليم - ابتدائي', value: 'concours-primaire' },
           { title: 'مباراة التعليم - إعدادي/تأهيلي', value: 'concours-secondaire' },
           { title: 'الماستر (Master)', value: 'master' },
+          { title: 'التوجيه (Tawjih)', value: 'tawjih' },
+          { title: 'أخبار ومستجدات', value: 'news' },
         ],
       },
     }),
