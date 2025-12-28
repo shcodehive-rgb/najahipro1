@@ -11,9 +11,10 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Metadata } from 'next'
 
-// 1. جلب المقال
-async function getPost(id: string) {
-  const query = `*[_type == "post" && _id == $id][0]{
+// 1. جلب المقال بالـ Slug ماشي ID
+async function getPost(slug: string) { // 👈 بدلنا id بـ slug
+  // 👇 بدلنا _id بـ slug.current
+  const query = `*[_type == "post" && slug.current == $slug][0]{
     _id,
     title,
     "category": level,
@@ -21,9 +22,10 @@ async function getPost(id: string) {
     "imageUrl": mainImage.asset->url,
     content,
     "downloadUrl": driveLink,
-    "fileUrl": file.asset->url
+    "fileUrl": file.asset->url,
+    keywords // 👈 زدنا هادي باش SEO يخدم
   }`
-  const post = await client.fetch(query, { id })
+  const post = await client.fetch(query, { slug }) // 👈 كنصيفطو slug
   return post
 }
 
@@ -40,9 +42,9 @@ async function getRelatedPosts(category: string, currentId: string) {
 }
 
 // 3. Metadata لـ SEO
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  const { id } = await params
-  const post = await getPost(id)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params // 👈 هنا ولات slug
+  const post = await getPost(slug)
   if (!post) return { title: 'مقال غير موجود' }
   return {
     title: post.title,
@@ -52,9 +54,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
-export default async function BlogPost({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const post = await getPost(id)
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params // 👈 هنا ولات slug
+  const post = await getPost(slug)
 
   if (!post) notFound()
   const relatedPosts = await getRelatedPosts(post.category, post._id)
