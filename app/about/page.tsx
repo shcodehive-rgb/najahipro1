@@ -1,90 +1,85 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { CheckCircle, Users, BookOpen, Target } from "lucide-react"
+import { Target, Users, BookOpen, Star } from "lucide-react"
+
+export const metadata = {
+  title: "من نحن | نجاحي برو",
+  description: "تعرف على فريق ورؤية منصة نجاحي برو للدعم التربوي في المغرب.",
+}
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white" dir="rtl">
+    <div className="min-h-screen bg-gray-50" dir="rtl">
       <Header />
       
-      <main>
-        {/* قسم العنوان (Hero Section) */}
-        <div className="bg-blue-600 text-white py-20 text-center">
-          <div className="max-w-4xl mx-auto px-4">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">من نحن؟</h1>
-            <p className="text-xl text-blue-100 leading-relaxed max-w-2xl mx-auto">
-              "نجاحي برو" هي منصتكم التعليمية الأولى في المغرب، نسعى لتمكين التلاميذ والطلبة من أدوات التفوق الدراسي عبر محتوى رقمي مجاني عالي الجودة.
+      <main className="max-w-5xl mx-auto px-4 py-12">
+        {/* قسم العنوان */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+             من نحن؟
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            منصة "نجاحي برو" هي بوابتك الأولى نحو التفوق الدراسي والنجاح المهني في المغرب.
+          </p>
+        </div>
+
+        {/* قسم المحتوى الرئيسي */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
+          <div className="space-y-6 text-lg text-gray-700 leading-loose">
+            <h2 className="text-3xl font-bold text-blue-600 mb-4">رؤيتنا</h2>
+            <p>
+              تأسست منصة <strong>نجاحي برو</strong> بهدف سد الفجوة في المحتوى التعليمي الرقمي في المغرب. نحن نؤمن بأن التعليم الجيد يجب أن يكون متاحاً للجميع، في أي وقت وفي أي مكان.
+            </p>
+            <p>
+              نطمح لأن نكون المرجع الأول للتلميذ والطالب المغربي، من التعليم الابتدائي وصولاً إلى التعليم الجامعي ومباريات التوظيف، من خلال توفير محتوى دقيق، مبسط، ومواكب للمستجدات.
             </p>
           </div>
+          <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 grid grid-cols-2 gap-6">
+            <div className="text-center p-4 bg-blue-50 rounded-2xl">
+              <BookOpen className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+              <span className="font-bold block">دروس شاملة</span>
+            </div>
+            <div className="text-center p-4 bg-green-50 rounded-2xl">
+              <Target className="w-8 h-8 text-green-600 mx-auto mb-2" />
+              <span className="font-bold block">توجيه دقيق</span>
+            </div>
+            <div className="text-center p-4 bg-purple-50 rounded-2xl">
+              <Star className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+              <span className="font-bold block">جودة عالية</span>
+            </div>
+            <div className="text-center p-4 bg-orange-50 rounded-2xl">
+              <Users className="w-8 h-8 text-orange-600 mx-auto mb-2" />
+              <span className="font-bold block">مجتمع داعم</span>
+            </div>
+          </div>
         </div>
 
-        {/* قسم المحتوى */}
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          
-          {/* قصتنا */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <BookOpen className="w-8 h-8 text-blue-600" />
-                قصة نجاحي برو
-              </h2>
-              <div className="prose prose-lg text-gray-600 leading-loose">
-                <p>
-                  انطلقت منصة <strong>NAJAHIPRO</strong> بمبادرة شبابية تهدف إلى سد الخصاص في المحتوى التعليمي الرقمي المنظم في المغرب. لاحظنا الصعوبات التي يواجهها التلاميذ في العثور على دروس وتمارين وحلول موثوقة، فقررنا إنشاء هذه المنصة لتكون مرجعاً شاملاً يغني عن البحث المتشتت.
-                </p>
-                <p>
-                  نحن نؤمن بأن التعليم حق للجميع، وأن التكنولوجيا هي الوسيلة الأنجع لتقريب المعرفة. لذلك، نحرص على تقديم محتوى يواكب المقررات الوزارية ويراعي التحديثات المستمرة.
-                </p>
-              </div>
-            </div>
-            <div className="bg-gray-100 rounded-2xl p-8 h-full flex items-center justify-center border border-gray-200">
-              <div className="text-center">
-                <h3 className="text-6xl font-black text-blue-600 mb-2">+10K</h3>
-                <p className="text-gray-500 font-medium">زائر شهرياً يستفيدون من خدماتنا</p>
-              </div>
-            </div>
+        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 border-b pb-6">لماذا نجاحي برو؟</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-right">
+             <div>
+                <h3 className="text-xl font-bold text-blue-600 mb-3">1. محتوى محين وموثوق</h3>
+                <p className="text-gray-600">يتم مراجعة وتحديث جميع الدروس والامتحانات بشكل دوري لتوافق المقررات الوزارية الجديدة.</p>
+             </div>
+             <div>
+                <h3 className="text-xl font-bold text-blue-600 mb-3">2. سهولة الوصول</h3>
+                <p className="text-gray-600">تصميم بسيط وسريع يسمح لك بالوصول إلى المعلومة التي تبحث عنها في ثوانٍ معدودة.</p>
+             </div>
+             <div>
+                <h3 className="text-xl font-bold text-blue-600 mb-3">3. مجانية التعليم</h3>
+                <p className="text-gray-600">نؤمن بأن العلم حق للجميع، لذلك نوفر أغلب خدماتنا بشكل مجاني تماماً لدعم تكافؤ الفرص.</p>
+             </div>
           </div>
+        </div>
 
-          {/* أهدافنا */}
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">لماذا تختار نجاحي برو؟</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-center">
-                <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-7 h-7" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">محتوى موثوق وشامل</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  نقدم دروساً وملخصات تغطي جميع الأسلاك الدراسية من الابتدائي إلى الجامعي، مراجعة من طرف أساتذة مختصين.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-center">
-                <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-7 h-7" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">توجيه مدرسي دقيق</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  لا نكتفي بالدروس، بل نرافقك في اختيار مسارك الدراسي والمهني عبر مقالات توجيهية وإعلانات المباريات.
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow text-center">
-                <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-7 h-7" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">مجتمع تفاعلي</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  نستمع لاقتراحاتكم ونطور المنصة باستمرار لتلبي حاجياتكم. نجاحكم هو نجاحنا.
-                </p>
-              </div>
-
-            </div>
-          </div>
-
+        <div className="bg-blue-600 rounded-3xl p-12 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">انضم إلى رحلة النجاح</h2>
+            <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+              سواء كنت تلميذاً، طالباً، أو باحثاً عن عمل، نحن هنا لدعمك في كل خطوة.
+            </p>
         </div>
       </main>
+
       <Footer />
     </div>
   )
