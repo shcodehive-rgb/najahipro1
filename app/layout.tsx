@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Najahi Pro",
   description: "منصة نجاحي برو للدعم التربوي",
+  verification: {
+    google: "Tm9y0KDPTqBRfYn3aoGTGKUdSwXumV7MvJjQv3WHbTU",
+  },
 };
 
 export default function RootLayout({
