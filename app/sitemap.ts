@@ -1,10 +1,11 @@
 import { MetadataRoute } from 'next'
-import { client } from '@/sanity/lib/client' // 👈 تأكدنا من المسار الصحيح
+import { client } from '@/sanity/lib/client'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.najahipro.com' // 👈 استعملنا الدومين الرسمي
+  const baseUrl = 'https://www.najahipro.com' // الدومين الرسمي ديالك
 
-  // 1. جلب جميع المقالات من Sanity
+  // 1. جلب المقالات (Posts)
+  // ملاحظة: كنستعملو slug حيت هو الأحسن لـ SEO (adSense كيبغيه)
   const posts = await client.fetch(`
     *[_type == "post"] {
       "slug": slug.current,
@@ -12,21 +13,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   `)
 
-  // 2. تحويل المقالات إلى روابط
-  // ملاحظة: تأكد واش المجلد ديال المقالات سميتو [slug] وسط post ولا blog
-  // أنا درت ليك /post/ حيت هي الشائعة
+  // 2. تحويل المقالات لروابط
   const postsUrls = posts.map((post: any) => ({
-    url: `${baseUrl}/post/${post.slug}`, 
+    // عندك المجلد سميتو "blog"، إذن الرابط غايكون /blog/slug
+    url: `${baseUrl}/blog/${post.slug}`, 
     lastModified: new Date(post._updatedAt),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
-  // 3. الروابط الثابتة (دير غير اللي عندك دابا بصح)
+  // 3. الصفحات الثابتة (شفتهم عندك فالصورة)
   const staticRoutes = [
-    '', // الصفحة الرئيسية
-    // '/contact', // 👈 حيد الشرطتين (//) غير إلا كنتي صاوبتي صفحة contact
-    // '/about',
+    '',         // الصفحة الرئيسية
+    '/about',   // من نحن
+    '/contact', // اتصل بنا
+    '/privacy', // سياسة الخصوصية
+    '/terms',   // شروط الاستخدام
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
