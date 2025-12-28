@@ -1,4 +1,4 @@
-import { client } from "@/sanity/client"
+import { client } from "@/sanity/lib/client" // تأكد من المسار (غالباً lib/client)
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Sidebar } from "@/components/sidebar"
@@ -10,9 +10,11 @@ import Link from "next/link"
 
 // 1. جلب مقالات الواجهة (المقالات الكبيرة الفوق)
 async function getFeaturedPosts() {
+  // 👇 التغيير هنا: زدنا "slug": slug.current
   const query = `*[_type == "post" && isFeatured == true][0...3] | order(_createdAt desc) {
     _id, 
     title, 
+    "slug": slug.current, 
     "category": level, 
     "date": _createdAt, 
     "imageUrl": mainImage.asset->url,
@@ -27,9 +29,11 @@ async function getFeaturedPosts() {
 
 // 2. جلب آخر المستجدات (القائمة العادية)
 async function getLatestPosts() {
+  // 👇 التغيير هنا: زدنا "slug": slug.current
   const query = `*[_type == "post" && isFeatured != true][0...6] | order(_createdAt desc) {
     _id, 
     title, 
+    "slug": slug.current,
     "category": level, 
     "date": _createdAt, 
     "imageUrl": mainImage.asset->url,
@@ -44,9 +48,11 @@ async function getLatestPosts() {
 
 // 3. جلب مقالات القسم الجديد (الأخبار الرائجة / المستجدات)
 async function getTrendingPosts() {
+  // 👇 التغيير هنا: زدنا "slug": slug.current
   const query = `*[_type == "post" && isTrending == true][0...4] | order(_createdAt desc) {
     _id, 
     title, 
+    "slug": slug.current,
     "category": level, 
     "date": _createdAt, 
     "imageUrl": mainImage.asset->url
@@ -75,14 +81,16 @@ export default async function Home() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               <div className="absolute bottom-0 p-8 w-full text-right">
                 <Badge className="bg-blue-600 mb-4">{mainFeature.category}</Badge>
-                <Link href={`/blog/${mainFeature._id}`}>
+                {/* 👇 الرابط ولا بالـ slug */}
+                <Link href={`/blog/${mainFeature.slug}`}>
                   <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4 hover:text-blue-400 transition-colors leading-tight">
                     {mainFeature.title}
                   </h2>
                 </Link>
                 <div className="flex items-center text-gray-300 text-sm gap-4 justify-start">
                   <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> {new Date(mainFeature.date).toLocaleDateString('ar-MA')}</span>
-                  <Link href={`/blog/${mainFeature._id}`} className="text-white font-bold flex items-center gap-2 hover:mr-2 transition-all">
+                  {/* 👇 الرابط ولا بالـ slug */}
+                  <Link href={`/blog/${mainFeature.slug}`} className="text-white font-bold flex items-center gap-2 hover:mr-2 transition-all">
                     اقرأ المزيد <ArrowLeft className="w-4 h-4"/>
                   </Link>
                 </div>
@@ -95,7 +103,10 @@ export default async function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 p-6 text-right">
                     <Badge className="bg-purple-600 mb-2">{post.category}</Badge>
-                    <Link href={`/blog/${post._id}`}><h3 className="text-lg font-bold text-white hover:text-purple-300 transition-colors">{post.title}</h3></Link>
+                    {/* 👇 الرابط ولا بالـ slug */}
+                    <Link href={`/blog/${post.slug}`}>
+                        <h3 className="text-lg font-bold text-white hover:text-purple-300 transition-colors">{post.title}</h3>
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -113,7 +124,8 @@ export default async function Home() {
               </h3>
               <div className="grid gap-8 text-right">
                 {latestPosts.map((post: any) => (
-                  <Link key={post._id} href={`/blog/${post._id}`} className="flex flex-col md:flex-row gap-6 bg-white p-5 rounded-3xl border border-gray-100 hover:shadow-2xl transition-all group text-right">
+                  // 👇 الرابط ولا بالـ slug
+                  <Link key={post._id} href={`/blog/${post.slug}`} className="flex flex-col md:flex-row gap-6 bg-white p-5 rounded-3xl border border-gray-100 hover:shadow-2xl transition-all group text-right">
                     <div className="w-full md:w-56 h-40 rounded-2xl overflow-hidden flex-shrink-0">
                       <img src={post.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-duration-500" />
                     </div>
@@ -141,7 +153,10 @@ export default async function Home() {
                       <img src={post.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-all" />
                       <Badge className="absolute top-3 right-3 bg-red-500">Trending</Badge>
                     </div>
-                    <Link href={`/blog/${post._id}`}><h4 className="font-bold text-gray-900 hover:text-red-500 transition-colors line-clamp-2 leading-relaxed">{post.title}</h4></Link>
+                    {/* 👇 الرابط ولا بالـ slug */}
+                    <Link href={`/blog/${post.slug}`}>
+                        <h4 className="font-bold text-gray-900 hover:text-red-500 transition-colors line-clamp-2 leading-relaxed">{post.title}</h4>
+                    </Link>
                   </div>
                 ))}
               </div>
