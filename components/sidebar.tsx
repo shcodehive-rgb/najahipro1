@@ -1,15 +1,16 @@
-import { client } from "@/sanity/client"
+import { client } from "@/sanity/lib/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { TrendingUp, ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { TrendingUp, ArrowLeft, Star, ExternalLink } from "lucide-react"
 import Link from "next/link"
 
-// دالة لجلب المقالات "المشهورة"
+// جلب المقالات "الأكثر قراءة" (isPopular)
 async function getPopularPosts() {
-  // كنجيبو 5 مقالات اللي فيهم isPopular = true
-  const query = `*[_type == "post" && isPopular == true][0...5] | order(_createdAt desc) {
+  // لاحظ هنا: زدنا "slug": slug.current
+  const query = `*[_type == "post" && isPopular == true] | order(_createdAt desc)[0...4] {
     _id,
     title,
+    "slug": slug.current, 
     "imageUrl": mainImage.asset->url,
     "category": level
   }`
@@ -17,58 +18,66 @@ async function getPopularPosts() {
 }
 
 export async function Sidebar() {
-  const posts = await getPopularPosts()
+  const popularPosts = await getPopularPosts()
 
   return (
     <div className="space-y-6">
       
-      {/* بطاقة "الأكثر قراءة" */}
-      <Card className="border-none shadow-md bg-white overflow-hidden">
-        <CardHeader className="bg-blue-50 border-b border-blue-100 pb-4">
-          <CardTitle className="text-lg font-bold flex items-center gap-2 text-blue-800">
-            <TrendingUp className="w-5 h-5" />
-            الأكثر قراءة
+      {/* بطاقة: مقالات رائجة */}
+      <Card className="border-gray-100 shadow-sm">
+        <CardHeader className="pb-3 border-b border-gray-50 bg-gray-50/50">
+          <CardTitle className="text-lg font-bold flex items-center gap-2 text-gray-900">
+            <TrendingUp className="w-5 h-5 text-red-500" />
+            مقالات رائجة
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="divide-y divide-gray-100">
-            {posts.length > 0 ? (
-              posts.map((post: any, index: number) => (
-                <Link key={post._id} href={`/blog/${post._id}`} className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors group">
-                  {/* الرقم الترتيبي */}
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
+          {popularPosts.length > 0 ? (
+            <div className="divide-y divide-gray-50">
+              {popularPosts.map((post: any, index: number) => (
+                <Link 
+                  key={post._id} 
+                  href={`/blog/${post.slug}`} // ✅ هنا التصحيح: استعملنا slug عوض _id
+                  className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors group"
+                >
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
                     {index + 1}
                   </div>
-                  
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-gray-700 leading-snug group-hover:text-blue-600 line-clamp-2">
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
                       {post.title}
                     </h4>
                     {post.category && (
-                        <span className="text-[10px] text-gray-400 mt-1 block">{post.category}</span>
+                      <span className="text-[10px] text-gray-400 mt-1 block">{post.category}</span>
                     )}
                   </div>
-                  
-                  {post.imageUrl && (
-                    <img src={post.imageUrl} alt={post.title} className="w-12 h-12 rounded-md object-cover border border-gray-100" />
-                  )}
                 </Link>
-              ))
-            ) : (
-              <p className="p-4 text-sm text-gray-400 text-center">لا توجد مقالات مشهورة حالياً</p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-6 text-center text-gray-400 text-sm">
+              لا توجد مقالات رائجة حالياً
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* بطاقة إشهارية أو معلومات إضافية (اختياري) */}
-      <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-6 text-white text-center shadow-lg">
-        <h3 className="font-bold text-lg mb-2">هل تحتاج مساعدة؟</h3>
-        <p className="text-blue-100 text-sm mb-4">انضم لمجموعتنا على تيليغرام للتوصل بآخر المستجدات.</p>
-        <button className="bg-white text-blue-600 px-6 py-2 rounded-full text-sm font-bold hover:bg-blue-50 transition-colors w-full">
-          انضم الآن
-        </button>
-      </div>
+      {/* بطاقة: إشهار أو روابط مفيدة (اختياري) */}
+      <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white border-none shadow-md overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10 blur-xl"></div>
+        <CardContent className="p-6 relative z-10">
+          <Star className="w-8 h-8 text-yellow-300 mb-4" />
+          <h3 className="text-lg font-bold mb-2">باك حر 2026؟</h3>
+          <p className="text-blue-100 text-sm mb-4 leading-relaxed">
+            استعد للامتحانات الوطنية مع ملخصات حصرية ونماذج امتحانات سابقة.
+          </p>
+          <Link href="/category/2bac">
+            <Button variant="secondary" size="sm" className="w-full font-bold text-blue-700 hover:bg-white">
+              اكتشف الدروس <ExternalLink className="w-3 h-3 mr-2" />
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
 
     </div>
   )
