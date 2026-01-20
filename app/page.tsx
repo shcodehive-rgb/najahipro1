@@ -154,7 +154,7 @@ export default async function Home() {
             <section className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
               <h3 className="text-2xl font-black text-gray-900 mb-10 flex items-center justify-between">
                 <span className="flex items-center gap-3"><TrendingUp className="text-red-500" /> مقالات رائجة</span>
-                <Link href="/category/akhbar" className="text-sm text-blue-600 hover:underline">مشاهدة الكل</Link>
+                <Link href="/trending" className="text-sm text-blue-600 hover:underline">مشاهدة الكل</Link>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-right">
                 {trendingPosts.map((post: any) => (
