@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, FolderOpen, BookOpen, Calendar, ImageOff } from "lucide-react"
 import Link from "next/link"
+import { Metadata } from "next"
 
 // 1. عناوين الصفحات
 const titles: Record<string, string> = {
@@ -24,7 +25,22 @@ const titles: Record<string, string> = {
   "university": "التعليم الجامعي",
 }
 
-// 2. دالة جلب البيانات مع تصحيح الرابط والصور
+// 2. Metadata for SEO
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const pageTitle = titles[slug] || slug;
+
+  return {
+    title: `${pageTitle} | نجاحي برو`,
+    description: `استكشف جميع المقالات والدروس في قسم ${pageTitle} على منصة نجاحي برو - منصة التعليم والتوجيه في المغرب.`,
+    openGraph: {
+      title: `${pageTitle} | نجاحي برو`,
+      description: `استكشف جميع المقالات والدروس في قسم ${pageTitle} على منصة نجاحي برو.`,
+    },
+  };
+}
+
+// 3. دالة جلب البيانات مع تصحيح الرابط والصور
 async function getCategoryData(slug: string) {
   let query = "";
   let params: any = { slug };
@@ -60,7 +76,7 @@ async function getCategoryData(slug: string) {
   return await client.fetch(finalQuery, params);
 }
 
-// 3. المكون الأساسي
+// 4. المكون الأساسي
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const articles = await getCategoryData(slug);
@@ -88,10 +104,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                   <Card key={article._id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col h-full border-gray-100">
                     <div className="relative h-48 bg-gray-100">
                       {article.imageUrl ? (
-                        <img 
-                          src={article.imageUrl} 
-                          alt={article.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                        <img
+                          src={article.imageUrl}
+                          alt={article.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full text-gray-400">

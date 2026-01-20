@@ -53,7 +53,7 @@ export async function MainContent() {
                   {article.category || "عام"}
                 </Badge>
               </div>
-              
+
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors leading-relaxed line-clamp-2">
                   {article.title}
@@ -62,8 +62,8 @@ export async function MainContent() {
                   {article.excerpt}
                 </p>
                 <div className="flex items-center justify-between">
-                  {/* الرابط دابا خدام بالـ Slug الحقيقي */}
-                  <Link href={`/blog/${article._id}`}> 
+                  {/* ✅ الرابط يستخدم slug بدلاً من _id */}
+                  <Link href={`/blog/${article.slug}`}>
                     <Button variant="link" className="text-blue-600 p-0 h-auto font-semibold">
                       اقرأ المزيد
                       <ArrowLeft className="mr-2 w-4 h-4 rotate-180" />

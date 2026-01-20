@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { TrendingUp, ArrowLeft, Star, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import { SearchInput } from "@/components/search-input"
+
 
 // جلب المقالات "الأكثر قراءة" (isPopular)
 async function getPopularPosts() {
@@ -22,7 +24,19 @@ export async function Sidebar() {
 
   return (
     <div className="space-y-6">
-      
+
+      {/* بطاقة: البحث */}
+      <Card className="border-gray-100 shadow-sm">
+        <CardHeader className="pb-3 border-b border-gray-50 bg-gray-50/50">
+          <CardTitle className="text-lg font-bold text-gray-900">
+            البحث في الموقع
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
+          <SearchInput />
+        </CardContent>
+      </Card>
+
       {/* بطاقة: مقالات رائجة */}
       <Card className="border-gray-100 shadow-sm">
         <CardHeader className="pb-3 border-b border-gray-50 bg-gray-50/50">
@@ -35,8 +49,8 @@ export async function Sidebar() {
           {popularPosts.length > 0 ? (
             <div className="divide-y divide-gray-50">
               {popularPosts.map((post: any, index: number) => (
-                <Link 
-                  key={post._id} 
+                <Link
+                  key={post._id}
                   href={`/blog/${post.slug}`} // ✅ هنا التصحيح: استعملنا slug عوض _id
                   className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors group"
                 >
@@ -59,23 +73,6 @@ export async function Sidebar() {
               لا توجد مقالات رائجة حالياً
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* بطاقة: إشهار أو روابط مفيدة (اختياري) */}
-      <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white border-none shadow-md overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10 blur-xl"></div>
-        <CardContent className="p-6 relative z-10">
-          <Star className="w-8 h-8 text-yellow-300 mb-4" />
-          <h3 className="text-lg font-bold mb-2">باك حر 2026؟</h3>
-          <p className="text-blue-100 text-sm mb-4 leading-relaxed">
-            استعد للامتحانات الوطنية مع ملخصات حصرية ونماذج امتحانات سابقة.
-          </p>
-          <Link href="/category/2bac">
-            <Button variant="secondary" size="sm" className="w-full font-bold text-blue-700 hover:bg-white">
-              اكتشف الدروس <ExternalLink className="w-3 h-3 mr-2" />
-            </Button>
-          </Link>
         </CardContent>
       </Card>
 

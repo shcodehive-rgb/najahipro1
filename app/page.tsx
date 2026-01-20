@@ -8,6 +8,16 @@ import { Badge } from "@/components/ui/badge"
 import { Clock, ArrowLeft, TrendingUp, Zap } from "lucide-react"
 import Link from "next/link"
 
+// Metadata for SEO
+export const metadata = {
+  title: "نجاحي برو | منصة التعليم والتوجيه في المغرب",
+  description: "منصة نجاحي برو - دروس، امتحانات، مباريات، وتوجيه مهني لجميع المستويات الدراسية في المغرب من الابتدائي إلى الجامعي.",
+  openGraph: {
+    title: "نجاحي برو | منصة التعليم والتوجيه في المغرب",
+    description: "منصة نجاحي برو - دروس، امتحانات، مباريات، وتوجيه مهني لجميع المستويات الدراسية في المغرب.",
+  },
+}
+
 // 1. جلب مقالات الواجهة (المقالات الكبيرة الفوق)
 async function getFeaturedPosts() {
   // 👇 التغيير هنا: زدنا "slug": slug.current
@@ -72,7 +82,7 @@ export default async function Home() {
     <div className="min-h-screen bg-gray-50/50" dir="rtl">
       <Header />
       <main className="max-w-7xl mx-auto px-4 py-8">
-        
+
         {/* --- قسم الواجهة الرئيسية (Hero) --- */}
         {mainFeature && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
@@ -88,10 +98,10 @@ export default async function Home() {
                   </h2>
                 </Link>
                 <div className="flex items-center text-gray-300 text-sm gap-4 justify-start">
-                  <span className="flex items-center gap-1"><Clock className="w-4 h-4"/> {new Date(mainFeature.date).toLocaleDateString('ar-MA')}</span>
+                  <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {new Date(mainFeature.date).toLocaleDateString('ar-MA')}</span>
                   {/* 👇 الرابط ولا بالـ slug */}
                   <Link href={`/blog/${mainFeature.slug}`} className="text-white font-bold flex items-center gap-2 hover:mr-2 transition-all">
-                    اقرأ المزيد <ArrowLeft className="w-4 h-4"/>
+                    اقرأ المزيد <ArrowLeft className="w-4 h-4" />
                   </Link>
                 </div>
               </div>
@@ -105,7 +115,7 @@ export default async function Home() {
                     <Badge className="bg-purple-600 mb-2">{post.category}</Badge>
                     {/* 👇 الرابط ولا بالـ slug */}
                     <Link href={`/blog/${post.slug}`}>
-                        <h3 className="text-lg font-bold text-white hover:text-purple-300 transition-colors">{post.title}</h3>
+                      <h3 className="text-lg font-bold text-white hover:text-purple-300 transition-colors">{post.title}</h3>
                     </Link>
                   </div>
                 </div>
@@ -116,7 +126,7 @@ export default async function Home() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-8 space-y-16">
-            
+
             {/* 1. قسم آخر المستجدات (الرئيسي) */}
             <section>
               <h3 className="text-2xl font-black text-gray-900 mb-8 border-r-8 border-blue-600 pr-4 flex items-center gap-3">
@@ -133,7 +143,7 @@ export default async function Home() {
                       <Badge variant="outline" className="mb-3 text-blue-600 bg-blue-50">{post.category}</Badge>
                       <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 leading-snug">{post.title}</h3>
                       <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed mb-4">{post.excerpt}</p>
-                      <span className="text-xs text-gray-400 flex items-center gap-1"><Clock className="w-3 h-3"/> {new Date(post.date).toLocaleDateString('ar-MA')}</span>
+                      <span className="text-xs text-gray-400 flex items-center gap-1"><Clock className="w-3 h-3" /> {new Date(post.date).toLocaleDateString('ar-MA')}</span>
                     </div>
                   </Link>
                 ))}
@@ -144,7 +154,7 @@ export default async function Home() {
             <section className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50">
               <h3 className="text-2xl font-black text-gray-900 mb-10 flex items-center justify-between">
                 <span className="flex items-center gap-3"><TrendingUp className="text-red-500" /> مقالات رائجة</span>
-                <Link href="/archive" className="text-sm text-blue-600 hover:underline">مشاهدة الكل</Link>
+                <Link href="/category/akhbar" className="text-sm text-blue-600 hover:underline">مشاهدة الكل</Link>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-right">
                 {trendingPosts.map((post: any) => (
@@ -155,7 +165,7 @@ export default async function Home() {
                     </div>
                     {/* 👇 الرابط ولا بالـ slug */}
                     <Link href={`/blog/${post.slug}`}>
-                        <h4 className="font-bold text-gray-900 hover:text-red-500 transition-colors line-clamp-2 leading-relaxed">{post.title}</h4>
+                      <h4 className="font-bold text-gray-900 hover:text-red-500 transition-colors line-clamp-2 leading-relaxed">{post.title}</h4>
                     </Link>
                   </div>
                 ))}
